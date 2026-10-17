@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", Arial, sans-serif;
+  --font-mono: "DM Mono", monospace;
+  --color-ink: #f2f0e9;
+  --color-muted: #979892;
+  --color-paper: #111310;
+  --color-line: rgba(242, 240, 233, 0.14);
+  --color-acid: #d1f16a;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-art-float: art-float 6s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% {
+      margin-top: 0;
+    }
+    50% {
+      margin-top: -17px;
+    }
+  }
+
+  @keyframes art-float {
+    0%, 100% {
+      margin-top: 0;
+    }
+    50% {
+      margin-top: -10px;
+    }
+  }
+}
