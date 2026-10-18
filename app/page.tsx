@@ -42,7 +42,7 @@ function ArrowIcon({ direction }: { direction: "left" | "right" }) {
       aria-hidden="true"
       viewBox="0 0 24 24"
       fill="none"
-      className={`size-[17px] ${direction === "left" ? "rotate-180" : ""}`}
+      className={`size-4.25 ${direction === "left" ? "rotate-180" : ""}`}
     >
       <path d="M4.5 12h15m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.5" />
     </svg>
@@ -67,12 +67,12 @@ export default function Home() {
 
   return (
     <main>
-      <header className="relative z-[5] flex h-[88px] items-center justify-between border-b border-line px-[7.2%] max-[760px]:h-[72px] max-[760px]:px-[6%] min-[1500px]:px-[max(7.2%,calc((100vw-1320px)/2))]">
-        <a className="inline-flex items-center gap-[11px] text-[15px] font-extrabold tracking-[0.16em] text-inherit no-underline" href="#home" aria-label="Forme home">
-          <span className="inline-flex h-6 w-[25px] items-center gap-0.5 [perspective:80px]" aria-hidden="true">
-            <i className="block h-[18px] w-[7px] -skew-y-[28deg] -rotate-y-[25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
-            <i className="block h-[23px] w-[7px] skew-y-[28deg] rotate-y-[25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
-            <i className="block h-[14px] w-[7px] -skew-y-[28deg] -rotate-y-[25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
+      <header className="relative z-5 flex h-22 items-center justify-between border-b border-line px-[7.2%] max-[760px]:h-18 max-[760px]:px-[6%] min-[1500px]:px-[max(7.2%,calc((100vw-1320px)/2))]">
+        <a className="inline-flex items-center gap-2.75 text-[15px] font-extrabold tracking-[0.16em] text-inherit no-underline" href="#home" aria-label="Forme home">
+          <span className="inline-flex h-6 w-6.25 items-center gap-0.5 perspective-[80px]" aria-hidden="true">
+            <i className="block h-4.5 w-1.75 skew-y-[-28deg] rotate-y-[-25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
+            <i className="block h-5.75 w-1.75 skew-y-28 rotate-y-25 bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
+            <i className="block h-[14px] w-[7px] -skew-y-[28deg] rotate-y-[-25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
           </span>
           <span>FORME</span>
         </a>
@@ -104,7 +104,10 @@ export default function Home() {
             We make the unseen feel real. A design studio shaping distinct identities
             and digital worlds for what&apos;s next.
           </p>
-          <a className="mt-[27px] inline-flex items-center gap-6 border-b border-[rgba(242,240,233,0.4)] pb-2 text-[11px] transition-colors duration-[180ms] hover:border-acid hover:text-acid motion-reduce:transition-none" href="#work">
+          <a
+            className="mt-[27px] inline-flex items-center gap-6 text-[11px] underline decoration-[rgba(242,240,233,0.4)] decoration-1 underline-offset-[8px] transition-colors duration-[180ms] hover:text-acid hover:decoration-acid motion-reduce:transition-none"
+            href="#work"
+          >
             Explore our work <span className="text-acid" aria-hidden="true">↓</span>
           </a>
         </div>
@@ -207,7 +210,10 @@ export default function Home() {
         <p className="mt-[25px] mb-0 max-w-[900px] text-[clamp(32px,5.3vw,70px)] font-medium leading-[1.15] tracking-[-0.07em]">
           We partner with people making <span className="text-[#85877e]">the future feel a little more human.</span>
         </p>
-        <a className="mt-[27px] inline-flex items-center gap-6 border-b border-[rgba(242,240,233,0.4)] pb-2 text-[11px] transition-colors duration-[180ms] hover:border-acid hover:text-acid motion-reduce:transition-none" href="mailto:hello@forme.studio">
+        <a
+          className="mt-[27px] inline-flex items-center gap-6 text-[11px] underline decoration-[rgba(242,240,233,0.4)] decoration-1 underline-offset-[8px] transition-colors duration-[180ms] hover:text-acid hover:decoration-acid motion-reduce:transition-none"
+          href="mailto:hello@forme.studio"
+        >
           A project in mind? Say hello <span className="text-acid" aria-hidden="true">↗</span>
         </a>
       </section>
