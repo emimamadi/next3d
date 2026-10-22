@@ -14,9 +14,9 @@ export default function DashboardPage() {
 
         <div className="grid flex-1 gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <section className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,#1d2b4a,#0a1020_55%,#070b14)] p-6 shadow-[0_30px_80px_rgba(14,116,144,0.25)]">
-            <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:32px_32px]" />
-            <div className="relative flex h-full min-h-[420px] items-center justify-center">
-              <div className="relative h-[300px] w-[300px] [transform:rotateX(62deg)_rotateZ(-28deg)]">
+            <div className="absolute inset-0 opacity-30 bg-[linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-size-[32px_32px]" />
+            <div className="relative flex h-full min-h-105 items-center justify-center">
+              <div className="relative h-75 w-75 transform-[rotateX(62deg)_rotateZ(-28deg)]">
                 <div className="absolute inset-6 rounded-[30%] border border-cyan-300/40 bg-cyan-300/10 shadow-[0_0_60px_rgba(103,232,249,0.35)]" />
                 <div className="absolute inset-[18%] rounded-[40%] border border-violet-300/40 bg-violet-400/10 shadow-[0_0_60px_rgba(196,181,253,0.3)]" />
                 <div className="absolute inset-[34%] rounded-full border border-emerald-300/60 bg-emerald-300/10 shadow-[0_0_60px_rgba(52,211,153,0.35)]" />
