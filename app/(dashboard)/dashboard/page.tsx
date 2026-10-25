@@ -1,63 +1,285 @@
-export default function DashboardPage() {
+"use client";
+
+import { useState, type FormEvent } from "react";
+import {
+  useHomepageContent,
+  type HomepageContent,
+  type HomepageProject,
+  type ProjectArt,
+} from "../../homepage-content";
+
+type TextContentKey = Exclude<keyof HomepageContent, "projects">;
+
+const artOptions: { value: ProjectArt; label: string }[] = [
+  { value: "solstice", label: "Solstice" },
+  { value: "otherworld", label: "Otherworld" },
+  { value: "soft-forms", label: "Soft Forms" },
+  { value: "new-ritual", label: "New Ritual" },
+  { value: "daydream", label: "Daydream" },
+];
+
+function ContentField({
+  label,
+  value,
+  multiline = false,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  multiline?: boolean;
+  onChange: (value: string) => void;
+}) {
+  const className =
+    "mt-2 w-full rounded-xl border border-white/10 bg-[#10120f] px-3.5 py-3 text-sm text-[#f2f0e9] outline-none transition placeholder:text-[#65675f] focus:border-[#d1f16a]/60";
   return (
-    <main className="min-h-screen bg-[#0b1020] text-slate-100">
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-10">
-        <header className="mb-8 flex items-center justify-between border-b border-white/10 pb-5">
+    <label className="block text-xs font-medium text-[#a5a69f]">
+      {label}
+      {multiline ? (
+        <textarea
+          className={`${className} min-h-24 resize-y leading-6`}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      ) : (
+        <input
+          className={className}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      )}
+    </label>
+  );
+}
+
+function SectionCard({
+  number,
+  title,
+  description,
+  children,
+}: {
+  number: string;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-white/10 bg-[#171914] p-5 sm:p-6">
+      <div className="mb-6 flex items-start gap-4 border-b border-white/10 pb-5">
+        <span className="pt-0.5 font-mono text-xs text-[#d1f16a]">{number}</span>
+        <div>
+          <h2 className="text-base font-semibold text-[#f2f0e9]">{title}</h2>
+          <p className="mt-1 text-xs leading-5 text-[#85877e]">{description}</p>
+        </div>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+export default function DashboardPage() {
+  const { content, setContent, loaded, error } = useHomepageContent();
+  const [projectDraft, setProjectDraft] = useState<HomepageProject | null>(null);
+
+  function updateContent(key: TextContentKey, value: string) {
+    setContent((current) => ({ ...current, [key]: value }));
+  }
+
+  function saveProject(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!projectDraft) return;
+    const exists = content.projects.some((project) => project.id === projectDraft.id);
+    setContent((current) => ({
+      ...current,
+      projects: exists
+        ? current.projects.map((project) => (project.id === projectDraft.id ? projectDraft : project))
+        : [...current.projects, projectDraft],
+    }));
+    setProjectDraft(null);
+  }
+
+  function deleteProject(project: HomepageProject) {
+    if (!window.confirm(`Delete "${project.name}" from the homepage?`)) return;
+    setContent((current) => ({
+      ...current,
+      projects: current.projects.filter((item) => item.id !== project.id),
+    }));
+  }
+
+  function newProject() {
+    setProjectDraft({
+      id: crypto.randomUUID(),
+      name: "",
+      category: "",
+      art: "solstice",
+    });
+  }
+
+  if (!loaded) {
+    return (
+      <main className="min-h-screen bg-[#111310] px-6 py-12 text-[#f2f0e9]">
+        <p className="mx-auto max-w-6xl text-sm text-[#979892]">Loading homepage content…</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[#111310] text-[#f2f0e9]">
+      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
+        <header className="mb-9 flex flex-wrap items-end justify-between gap-5 border-b border-white/10 pb-7">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.28em] text-cyan-300/80">3D Workspace</p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight">Dashboard</h1>
+            <a className="text-xs text-[#979892] transition hover:text-[#d1f16a]" href="/">
+              ← View homepage
+            </a>
+            <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.24em] text-[#d1f16a]">
+              FORME / CONTENT STUDIO
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Homepage dashboard
+            </h1>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-[#979892]">
+              Edit every homepage section and manage the work carousel. Changes save automatically in this browser.
+            </p>
           </div>
-          <button className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 transition hover:bg-cyan-400/20">
-            Live sync
-          </button>
+          <a
+            className="rounded-full border border-white/15 px-4 py-2 text-xs text-[#c5c6bf] transition hover:border-[#d1f16a]/60 hover:text-[#d1f16a]"
+            href="/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Preview homepage ↗
+          </a>
         </header>
 
-        <div className="grid flex-1 gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <section className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top,#1d2b4a,#0a1020_55%,#070b14)] p-6 shadow-[0_30px_80px_rgba(14,116,144,0.25)]">
-            <div className="absolute inset-0 opacity-30 bg-[linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-size-[32px_32px]" />
-            <div className="relative flex h-full min-h-105 items-center justify-center">
-              <div className="relative h-75 w-75 transform-[rotateX(62deg)_rotateZ(-28deg)]">
-                <div className="absolute inset-6 rounded-[30%] border border-cyan-300/40 bg-cyan-300/10 shadow-[0_0_60px_rgba(103,232,249,0.35)]" />
-                <div className="absolute inset-[18%] rounded-[40%] border border-violet-300/40 bg-violet-400/10 shadow-[0_0_60px_rgba(196,181,253,0.3)]" />
-                <div className="absolute inset-[34%] rounded-full border border-emerald-300/60 bg-emerald-300/10 shadow-[0_0_60px_rgba(52,211,153,0.35)]" />
+        {error && (
+          <p role="alert" className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">
+            {error}
+          </p>
+        )}
+
+        <div className="grid gap-5 lg:grid-cols-2">
+          <SectionCard number="01" title="Header & contact" description="Brand, navigation, and the email used across the site.">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <ContentField label="Brand name" value={content.brandName} onChange={(value) => updateContent("brandName", value)} />
+              <ContentField label="Contact email" value={content.contactEmail} onChange={(value) => updateContent("contactEmail", value)} />
+              <ContentField label="Work navigation label" value={content.navWorkLabel} onChange={(value) => updateContent("navWorkLabel", value)} />
+              <ContentField label="Studio navigation label" value={content.navStudioLabel} onChange={(value) => updateContent("navStudioLabel", value)} />
+            </div>
+          </SectionCard>
+
+          <SectionCard number="02" title="Hero" description="The introduction and call to action at the top of the homepage.">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <ContentField label="Eyebrow" value={content.heroEyebrow} onChange={(value) => updateContent("heroEyebrow", value)} />
+              <ContentField label="Title — first line" value={content.heroTitleLine1} onChange={(value) => updateContent("heroTitleLine1", value)} />
+              <ContentField label="Title — second line" value={content.heroTitleLine2} onChange={(value) => updateContent("heroTitleLine2", value)} />
+              <ContentField label="Title — accent" value={content.heroAccent} onChange={(value) => updateContent("heroAccent", value)} />
+              <ContentField label="Description" value={content.heroDescription} multiline onChange={(value) => updateContent("heroDescription", value)} />
+              <ContentField label="Call to action" value={content.heroCta} onChange={(value) => updateContent("heroCta", value)} />
+              <ContentField label="Scroll prompt" value={content.heroScrollText} onChange={(value) => updateContent("heroScrollText", value)} />
+              <ContentField label="Bottom note" value={content.heroFootnote} onChange={(value) => updateContent("heroFootnote", value)} />
+            </div>
+          </SectionCard>
+
+          <SectionCard number="03" title="Selected work" description="Section copy and all carousel projects.">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <ContentField label="Eyebrow" value={content.workEyebrow} onChange={(value) => updateContent("workEyebrow", value)} />
+              <ContentField label="Heading" value={content.workTitle} onChange={(value) => updateContent("workTitle", value)} />
+              <ContentField label="Heading accent" value={content.workAccent} onChange={(value) => updateContent("workAccent", value)} />
+              <ContentField label="Artwork caption" value={content.workArtCaption} onChange={(value) => updateContent("workArtCaption", value)} />
+              <div className="sm:col-span-2">
+                <ContentField label="Description (new line creates a line break)" value={content.workDescription} multiline onChange={(value) => updateContent("workDescription", value)} />
               </div>
             </div>
-          </section>
 
-          <aside className="space-y-6">
-            <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-              <p className="text-[10px] uppercase tracking-[0.22em] text-slate-400">Overview</p>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                {[
-                  ["Projects", "12"],
-                  ["Signals", "48"],
-                  ["Latency", "87ms"],
-                  ["Uptime", "99.9%"],
-                ].map(([label, value]) => (
-                  <div key={label} className="rounded-2xl border border-white/10 bg-slate-900/40 p-3">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">{label}</p>
-                    <p className="mt-3 text-2xl font-semibold text-white">{value}</p>
-                  </div>
-                ))}
+            <div className="mt-7">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-[#a5a69f]">
+                  Projects <span className="text-[#777970]">({content.projects.length})</span>
+                </h3>
+                <button
+                  className="rounded-full bg-[#d1f16a] px-3.5 py-2 text-xs font-semibold text-[#111310] transition hover:bg-[#e0ff86]"
+                  type="button"
+                  onClick={newProject}
+                >
+                  + Add project
+                </button>
               </div>
-            </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-slate-950/60 p-5">
-              <p className="text-[10px] uppercase tracking-[0.22em] text-slate-400">Activity</p>
-              <ul className="mt-4 space-y-3 text-sm text-slate-300">
-                {[
-                  "Motion model updated",
-                  "Lighting pass complete",
-                  "Viewport synced across 4 screens",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/5 px-3 py-2">
-                    <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
-                    {item}
+              <ul className="space-y-2">
+                {content.projects.map((project, index) => (
+                  <li key={project.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-[#10120f] px-3.5 py-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{project.name || "Untitled project"}</p>
+                      <p className="mt-1 truncate text-xs text-[#85877e]">
+                        {String(index + 1).padStart(2, "0")} · {project.category} · {artOptions.find((option) => option.value === project.art)?.label}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#c5c6bf] transition hover:border-[#d1f16a]/50 hover:text-[#d1f16a]"
+                        type="button"
+                        onClick={() => setProjectDraft({ ...project })}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#c5c6bf] transition hover:border-red-400/50 hover:text-red-200"
+                        type="button"
+                        onClick={() => deleteProject(project)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </li>
                 ))}
+                {content.projects.length === 0 && (
+                  <li className="rounded-xl border border-dashed border-white/15 px-4 py-6 text-center text-xs text-[#85877e]">
+                    No projects yet. Add one to bring the carousel back to life.
+                  </li>
+                )}
               </ul>
+
+              {projectDraft && (
+                <form className="mt-4 space-y-4 rounded-xl border border-[#d1f16a]/30 bg-[#111310] p-4" onSubmit={saveProject}>
+                  <h3 className="text-sm font-semibold">{content.projects.some((project) => project.id === projectDraft.id) ? "Edit project" : "New project"}</h3>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <ContentField label="Project name" value={projectDraft.name} onChange={(value) => setProjectDraft({ ...projectDraft, name: value })} />
+                    <ContentField label="Category / year" value={projectDraft.category} onChange={(value) => setProjectDraft({ ...projectDraft, category: value })} />
+                    <label className="block text-xs font-medium text-[#a5a69f]">
+                      Artwork style
+                      <select
+                        className="mt-2 w-full rounded-xl border border-white/10 bg-[#10120f] px-3.5 py-3 text-sm text-[#f2f0e9] outline-none focus:border-[#d1f16a]/60"
+                        value={projectDraft.art}
+                        onChange={(event) => setProjectDraft({ ...projectDraft, art: event.target.value as ProjectArt })}
+                      >
+                        {artOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                      </select>
+                    </label>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <button className="rounded-full border border-white/15 px-4 py-2 text-xs text-[#c5c6bf] hover:border-white/30" type="button" onClick={() => setProjectDraft(null)}>
+                      Cancel
+                    </button>
+                    <button className="rounded-full bg-[#d1f16a] px-4 py-2 text-xs font-semibold text-[#111310] hover:bg-[#e0ff86]" type="submit">
+                      Save project
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
-          </aside>
+          </SectionCard>
+
+          <SectionCard number="04" title="The studio" description="The studio statement and contact call to action.">
+            <div className="grid gap-4">
+              <ContentField label="Eyebrow" value={content.studioEyebrow} onChange={(value) => updateContent("studioEyebrow", value)} />
+              <ContentField label="Statement — first part" value={content.studioTextLead} onChange={(value) => updateContent("studioTextLead", value)} />
+              <ContentField label="Statement — highlighted part" value={content.studioTextMuted} onChange={(value) => updateContent("studioTextMuted", value)} />
+              <ContentField label="Call to action" value={content.studioCta} onChange={(value) => updateContent("studioCta", value)} />
+            </div>
+          </SectionCard>
+
+          <SectionCard number="05" title="Footer" description="The copyright line. Footer contact uses the email above.">
+            <ContentField label="Copyright text" value={content.footerCopyright} onChange={(value) => updateContent("footerCopyright", value)} />
+          </SectionCard>
         </div>
       </div>
     </main>

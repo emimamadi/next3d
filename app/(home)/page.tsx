@@ -1,16 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useHomepageContent, type ProjectArt } from "../homepage-content";
 
-const projects = [
-  { number: "01", name: "Solstice", category: "Art direction · 2025", art: "solstice" },
-  { number: "02", name: "Otherworld", category: "Digital experience · 2025", art: "otherworld" },
-  { number: "03", name: "Soft Forms", category: "Identity · 2024", art: "soft-forms" },
-  { number: "04", name: "New Ritual", category: "Campaign · 2024", art: "new-ritual" },
-  { number: "05", name: "Daydream", category: "Packaging · 2024", art: "daydream" },
-] as const;
-
-const projectArtClasses = {
+const projectArtClasses: Record<ProjectArt, string> = {
   solstice:
     "bg-[#d4c4a3] bg-[radial-gradient(circle_at_50%_44%,rgba(255,246,221,0.32),transparent_42%)] [&_.art-object]:rounded-[46%_54%_63%_37%/46%_40%_60%_54%] [&_.art-object]:bg-[radial-gradient(circle_at_31%_25%,#fff3cd,#e79453_24%,#b84736_48%,#572d31_76%)] [&_.art-object]:shadow-[inset_-20px_-18px_30px_rgba(30,16,18,0.55),inset_12px_12px_21px_rgba(255,242,207,0.38),24px_35px_50px_rgba(68,38,32,0.35)] [&_.art-object]:[transform:rotate(-16deg)_rotateY(-18deg)] [&_.art-object-detail]:inset-[-16%_-22%] [&_.art-object-detail]:border-[rgba(93,43,36,0.7)] [&_.art-object-detail]:rounded-full [&_.art-object-detail]:[transform:rotate(48deg)_rotateX(67deg)]",
   otherworld:
@@ -50,17 +43,22 @@ function ArrowIcon({ direction }: { direction: "left" | "right" }) {
 }
 
 export default function Home() {
+  const { content } = useHomepageContent();
   const [activeProject, setActiveProject] = useState(0);
+  const activeProjectIndex = content.projects.length
+    ? activeProject % content.projects.length
+    : 0;
 
   function moveCarousel(direction: number) {
-    setActiveProject((current) => (current + direction + projects.length) % projects.length);
+    if (content.projects.length === 0) return;
+    setActiveProject((current) => (current + direction + content.projects.length) % content.projects.length);
   }
 
   function getPosition(index: number) {
-    const offset = (index - activeProject + projects.length) % projects.length;
+    const offset = (index - activeProjectIndex + content.projects.length) % content.projects.length;
     if (offset === 0) return "active";
     if (offset === 1) return "right";
-    if (offset === projects.length - 1) return "left";
+    if (offset === content.projects.length - 1) return "left";
     if (offset === 2) return "right-far";
     return "left-far";
   }
@@ -74,13 +72,13 @@ export default function Home() {
             <i className="block h-5.75 w-1.75 skew-y-28 rotate-y-25 bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
             <i className="block h-[14px] w-[7px] -skew-y-[28deg] rotate-y-[-25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
           </span>
-          <span>FORME</span>
+          <span>{content.brandName}</span>
         </a>
         <nav className="ml-[70px] flex gap-[38px] max-[760px]:hidden" aria-label="Main navigation">
-          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="#work">Selected work</a>
-          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="#about">The studio</a>
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="#work">{content.navWorkLabel}</a>
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="#about">{content.navStudioLabel}</a>
         </nav>
-        <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none max-[760px]:text-[11px]" href="mailto:hello@forme.studio">
+        <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none max-[760px]:text-[11px]" href={`mailto:${content.contactEmail}`}>
           Let&apos;s talk <span className="ml-[6px] text-acid" aria-hidden="true">↗</span>
         </a>
       </header>
@@ -93,22 +91,21 @@ export default function Home() {
         <div className="relative z-[2] self-center pb-[34px] max-[760px]:self-start max-[760px]:p-0">
           <p className="m-0 font-mono text-[10px] leading-[1.6] tracking-[0.11em] text-muted uppercase">
             <span className="mr-2 mb-px inline-block size-[6px] rounded-full bg-acid shadow-[0_0_12px_rgba(209,241,106,0.6)]" />
-            Independent creative studio · Est. 2018
+            {content.heroEyebrow}
           </p>
           <h1 className="mt-[27px] mb-[22px] text-[clamp(56px,7.6vw,108px)] font-medium leading-[0.98] tracking-[-0.085em] max-[760px]:mt-[22px] max-[760px]:mb-[18px] max-[760px]:text-[clamp(58px,12vw,82px)]">
-            Ideas in
+            {content.heroTitleLine1}
             <br />
-            another <span className="font-normal text-acid italic tracking-[-0.09em]">dimension.</span>
+            {content.heroTitleLine2} <span className="font-normal text-acid italic tracking-[-0.09em]">{content.heroAccent}</span>
           </h1>
           <p className="m-0 max-w-[365px] text-[13px] leading-[1.85] text-[#a6a79f] max-[760px]:max-w-[330px] max-[760px]:text-[12px]">
-            We make the unseen feel real. A design studio shaping distinct identities
-            and digital worlds for what&apos;s next.
+            {content.heroDescription}
           </p>
           <a
             className="mt-[27px] inline-flex items-center gap-6 text-[11px] underline decoration-[rgba(242,240,233,0.4)] decoration-1 underline-offset-[8px] transition-colors duration-[180ms] hover:text-acid hover:decoration-acid motion-reduce:transition-none"
             href="#work"
           >
-            Explore our work <span className="text-acid" aria-hidden="true">↓</span>
+            {content.heroCta} <span className="text-acid" aria-hidden="true">↓</span>
           </a>
         </div>
 
@@ -130,40 +127,48 @@ export default function Home() {
         </div>
 
         <div className="col-span-full flex items-center gap-4 self-end font-mono text-[9px] tracking-[0.04em] text-[#8b8d84] uppercase max-[760px]:gap-[10px] max-[760px]:text-[8px]">
-          <span>Scroll to explore</span>
+          <span>{content.heroScrollText}</span>
           <span className="h-px w-[50px] bg-acid max-[760px]:w-7" />
-          <span className="ml-auto max-[420px]:max-w-[125px] max-[420px]:text-right">Independent by nature. Curious by design.</span>
+          <span className="ml-auto max-[420px]:max-w-[125px] max-[420px]:text-right">{content.heroFootnote}</span>
         </div>
       </section>
 
       <section className="overflow-hidden border-t border-line px-[7.2%] pt-[105px] pb-[110px] max-[760px]:px-[6%] max-[760px]:pt-[78px] max-[760px]:pb-[82px] min-[1500px]:px-[max(7.2%,calc((100vw-1320px)/2))]" id="work" aria-labelledby="work-title">
         <div className="mb-[45px] flex items-end justify-between max-[760px]:mb-[30px] max-[760px]:flex-col max-[760px]:items-start max-[760px]:gap-[15px]">
           <div>
-            <p className="m-0 font-mono text-[10px] leading-[1.6] tracking-[0.11em] text-muted uppercase">A few things we&apos;ve made</p>
+            <p className="m-0 font-mono text-[10px] leading-[1.6] tracking-[0.11em] text-muted uppercase">{content.workEyebrow}</p>
             <h2 className="mt-3 mb-0 text-[clamp(38px,5.2vw,68px)] font-medium leading-none tracking-[-0.075em]">
-              Selected <span className="font-normal text-acid italic">work</span>
+              {content.workTitle} <span className="font-normal text-acid italic">{content.workAccent}</span>
             </h2>
           </div>
           <p className="m-0 mb-[3px] text-[11px] leading-[1.8] text-[#a4a59e] max-[760px]:text-[10px]">
-            Identity, digital, and other good things.<br />Made with intention, never by the numbers.
+            {content.workDescription.split("\n").map((line, index) => (
+              <span key={`${line}-${index}`}>{index > 0 && <br />}{line}</span>
+            ))}
           </p>
         </div>
 
         <div className="relative" aria-roledescription="carousel" aria-label="Selected projects">
           <div className="relative h-[clamp(360px,48vw,570px)] [perspective:1300px] [transform-style:preserve-3d] max-[760px]:h-[min(93vw,470px)] max-[760px]:min-h-[340px] max-[420px]:min-h-[310px]">
-            {projects.map((project, index) => {
+            {content.projects.length === 0 && (
+              <p className="absolute inset-0 grid place-items-center font-mono text-xs uppercase tracking-[0.14em] text-[#92948c]">
+                New work coming soon
+              </p>
+            )}
+            {content.projects.map((project, index) => {
               const position = getPosition(index);
-              const isActive = index === activeProject;
+              const isActive = index === activeProjectIndex;
+              const projectNumber = String(index + 1).padStart(2, "0");
               return (
                 <article
                   className={`absolute top-0 left-1/2 flex h-full w-[min(62%,760px)] flex-col [transform-style:preserve-3d] [transition:transform_650ms_cubic-bezier(0.2,0.75,0.2,1),opacity_500ms_ease,filter_500ms_ease] [will-change:transform] motion-reduce:transition-none max-[760px]:w-[82%] max-[420px]:w-[86%] ${projectPositionClasses[position]}`}
-                  key={project.name}
+                  key={project.id}
                   aria-hidden={!isActive}
                   aria-label={`${project.name}, ${project.category}`}
                 >
                   <div className={`relative isolate flex min-h-0 flex-1 overflow-hidden bg-[#c6bdac] ${projectArtClasses[project.art as keyof typeof projectArtClasses]}`}>
                     <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(130deg,rgba(255,255,255,0.19),transparent_45%),linear-gradient(0deg,rgba(0,0,0,0.19),transparent_45%)]" />
-                    <span className="absolute top-[21px] left-[22px] z-[3] font-mono text-[9px] tracking-[0.09em] text-[rgba(20,23,17,0.62)] uppercase max-[420px]:top-[15px] max-[420px]:left-[15px]">F—{project.number}</span>
+                    <span className="absolute top-[21px] left-[22px] z-[3] font-mono text-[9px] tracking-[0.09em] text-[rgba(20,23,17,0.62)] uppercase max-[420px]:top-[15px] max-[420px]:left-[15px]">F—{projectNumber}</span>
                     <div className="absolute inset-0 grid place-items-center [perspective:800px]">
                       <div className="art-object relative z-[2] aspect-square w-[clamp(125px,17vw,220px)] [transform-style:preserve-3d] animate-art-float motion-reduce:animate-none max-[760px]:w-[clamp(130px,37vw,190px)]">
                         <span className="absolute inset-0 block border" />
@@ -172,32 +177,32 @@ export default function Home() {
                       <div className="art-shadow absolute top-[72%] left-[28%] h-[8%] w-[44%] rotate-x-[70deg] rounded-[50%] bg-[rgba(20,23,17,0.42)] blur-[16px]" />
                       <div className="art-orbit absolute h-[18%] w-1/2 rounded-[50%] border border-[rgba(30,34,25,0.5)] [transform:rotate(-35deg)_rotateX(68deg)_translateZ(40px)]" />
                     </div>
-                    <span className="absolute right-[22px] bottom-5 z-[3] font-mono text-[9px] tracking-[0.09em] text-[rgba(20,23,17,0.62)] uppercase max-[420px]:right-[15px] max-[420px]:bottom-[15px] max-[420px]:text-[7px]">A study in form &amp; feeling</span>
+                    <span className="absolute right-[22px] bottom-5 z-[3] font-mono text-[9px] tracking-[0.09em] text-[rgba(20,23,17,0.62)] uppercase max-[420px]:right-[15px] max-[420px]:bottom-[15px] max-[420px]:text-[7px]">{content.workArtCaption}</span>
                   </div>
                   <div className="flex items-center justify-between px-px pt-[17px]">
                     <div>
                       <h3 className="mt-0 mb-1 text-[14px] font-semibold tracking-[-0.03em]">{project.name}</h3>
                       <p className="m-0 font-mono text-[9px] text-[#92948c]">{project.category}</p>
                     </div>
-                    <span className="font-mono text-[9px] text-[#92948c]">{project.number} / 05</span>
+                    <span className="font-mono text-[9px] text-[#92948c]">{projectNumber} / {String(content.projects.length).padStart(2, "0")}</span>
                   </div>
                 </article>
               );
             })}
           </div>
           <div className="mx-auto mt-[27px] flex w-[min(62%,760px)] items-center justify-between max-[760px]:mt-[22px] max-[760px]:w-full">
-            <div className="flex items-center gap-3 font-mono text-[9px] text-[#93958d]" aria-label={`Project ${activeProject + 1} of ${projects.length}`}>
-              <span className="text-acid">{String(activeProject + 1).padStart(2, "0")}</span>
+            <div className="flex items-center gap-3 font-mono text-[9px] text-[#93958d]" aria-label={`Project ${content.projects.length ? activeProjectIndex + 1 : 0} of ${content.projects.length}`}>
+              <span className="text-acid">{String(content.projects.length ? activeProjectIndex + 1 : 0).padStart(2, "0")}</span>
               <span className="h-px w-[100px] bg-line">
-                <span className="block h-full bg-acid transition-[width] duration-300 motion-reduce:transition-none" style={{ width: `${((activeProject + 1) / projects.length) * 100}%` }} />
+                <span className="block h-full bg-acid transition-[width] duration-300 motion-reduce:transition-none" style={{ width: `${content.projects.length ? ((activeProjectIndex + 1) / content.projects.length) * 100 : 0}%` }} />
               </span>
-              <span>{String(projects.length).padStart(2, "0")}</span>
+              <span>{String(content.projects.length).padStart(2, "0")}</span>
             </div>
             <div className="flex gap-2">
-              <button className="grid size-[38px] cursor-pointer place-items-center rounded-full border border-line bg-transparent p-0 text-ink transition-[border-color,color,background-color] duration-[180ms] hover:border-acid hover:bg-acid hover:text-paper motion-reduce:transition-none" type="button" onClick={() => moveCarousel(-1)} aria-label="Previous project">
+              <button disabled={content.projects.length < 2} className="grid size-[38px] cursor-pointer place-items-center rounded-full border border-line bg-transparent p-0 text-ink transition-[border-color,color,background-color] duration-[180ms] hover:border-acid hover:bg-acid hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none" type="button" onClick={() => moveCarousel(-1)} aria-label="Previous project">
                 <ArrowIcon direction="left" />
               </button>
-              <button className="grid size-[38px] cursor-pointer place-items-center rounded-full border border-line bg-transparent p-0 text-ink transition-[border-color,color,background-color] duration-[180ms] hover:border-acid hover:bg-acid hover:text-paper motion-reduce:transition-none" type="button" onClick={() => moveCarousel(1)} aria-label="Next project">
+              <button disabled={content.projects.length < 2} className="grid size-[38px] cursor-pointer place-items-center rounded-full border border-line bg-transparent p-0 text-ink transition-[border-color,color,background-color] duration-[180ms] hover:border-acid hover:bg-acid hover:text-paper disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none" type="button" onClick={() => moveCarousel(1)} aria-label="Next project">
                 <ArrowIcon direction="right" />
               </button>
             </div>
@@ -206,15 +211,15 @@ export default function Home() {
       </section>
 
       <section className="border-t border-line bg-[#1a1c17] px-[7.2%] pt-[102px] pb-[112px] max-[760px]:px-[6%] max-[760px]:pt-[75px] max-[760px]:pb-[82px] min-[1500px]:px-[max(7.2%,calc((100vw-1320px)/2))]" id="about">
-        <p className="m-0 font-mono text-[10px] leading-[1.6] tracking-[0.11em] text-muted uppercase">Small studio. Big imagination.</p>
+        <p className="m-0 font-mono text-[10px] leading-[1.6] tracking-[0.11em] text-muted uppercase">{content.studioEyebrow}</p>
         <p className="mt-[25px] mb-0 max-w-[900px] text-[clamp(32px,5.3vw,70px)] font-medium leading-[1.15] tracking-[-0.07em]">
-          We partner with people making <span className="text-[#85877e]">the future feel a little more human.</span>
+          {content.studioTextLead} <span className="text-[#85877e]">{content.studioTextMuted}</span>
         </p>
         <a
           className="mt-[27px] inline-flex items-center gap-6 text-[11px] underline decoration-[rgba(242,240,233,0.4)] decoration-1 underline-offset-[8px] transition-colors duration-[180ms] hover:text-acid hover:decoration-acid motion-reduce:transition-none"
-          href="mailto:hello@forme.studio"
+          href={`mailto:${content.contactEmail}`}
         >
-          A project in mind? Say hello <span className="text-acid" aria-hidden="true">↗</span>
+          {content.studioCta} <span className="text-acid" aria-hidden="true">↗</span>
         </a>
       </section>
 
@@ -225,10 +230,10 @@ export default function Home() {
             <i className="block h-[23px] w-[7px] skew-y-[28deg] rotate-y-[25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
             <i className="block h-[14px] w-[7px] -skew-y-[28deg] -rotate-y-[25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
           </span>
-          <span>FORME</span>
+          <span>{content.brandName}</span>
         </a>
-        <span className="max-[420px]:hidden">© FORME STUDIO 2025</span>
-        <a href="mailto:hello@forme.studio">HELLO@FORME.STUDIO <span className="text-acid" aria-hidden="true">↗</span></a>
+        <span className="max-[420px]:hidden">{content.footerCopyright}</span>
+        <a href={`mailto:${content.contactEmail}`}>{content.contactEmail.toUpperCase()} <span className="text-acid" aria-hidden="true">↗</span></a>
       </footer>
     </main>
   );
