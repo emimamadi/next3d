@@ -78,8 +78,12 @@ export default function Home() {
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="#work">{content.navWorkLabel}</a>
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="#about">{content.navStudioLabel}</a>
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="/blog">Blog</a>
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="/login">Login</a>
         </nav>
-        <a className="hidden text-[11px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid max-[760px]:inline-block" href="/blog">Blog</a>
+        <div className="flex items-center gap-3 max-[760px]:flex-col max-[760px]:items-end">
+          <a className="hidden text-[11px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid max-[760px]:inline-block" href="/blog">Blog</a>
+          <a className="hidden text-[11px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid max-[760px]:inline-block" href="/login">Login</a>
+        </div>
         <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none max-[760px]:text-[11px]" href={`mailto:${content.contactEmail}`}>
           Let&apos;s talk <span className="ml-[6px] text-acid" aria-hidden="true">↗</span>
         </a>
