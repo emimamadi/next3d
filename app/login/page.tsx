@@ -1,8 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('alex@forme.studio');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
@@ -10,7 +12,9 @@ export default function LoginPage() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    window.localStorage.setItem('forme-auth-session', 'active');
     setSubmitted(true);
+    router.push('/dashboard');
   }
 
   return (

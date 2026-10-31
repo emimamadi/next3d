@@ -30,7 +30,7 @@ function ContentField({
   onChange: (value: string) => void;
 }) {
   const className =
-    "mt-2 w-full rounded-xl border border-white/10 bg-[#10120f] px-3.5 py-3 text-sm text-[#f2f0e9] outline-none transition placeholder:text-[#65675f] focus:border-[#d1f16a]/60";
+    "mt-2 w-full rounded-xl border border-white/10 bg-[#10120f] px-3.5 py-3 text-sm text-ink outline-none transition placeholder:text-[#65675f] focus:border-acid/60";
   return (
     <label className="block text-xs font-medium text-[#a5a69f]">
       {label}
@@ -65,9 +65,9 @@ function SectionCard({
   return (
     <section className="rounded-2xl border border-white/10 bg-[#171914] p-5 sm:p-6">
       <div className="mb-6 flex items-start gap-4 border-b border-white/10 pb-5">
-        <span className="pt-0.5 font-mono text-xs text-[#d1f16a]">{number}</span>
+        <span className="pt-0.5 font-mono text-xs text-acid">{number}</span>
         <div>
-          <h2 className="text-base font-semibold text-[#f2f0e9]">{title}</h2>
+          <h2 className="text-base font-semibold text-ink">{title}</h2>
           <p className="mt-1 text-xs leading-5 text-[#85877e]">{description}</p>
         </div>
       </div>
@@ -116,38 +116,46 @@ export default function DashboardPage() {
 
   if (!loaded) {
     return (
-      <main className="min-h-screen bg-[#111310] px-6 py-12 text-[#f2f0e9]">
-        <p className="mx-auto max-w-6xl text-sm text-[#979892]">Loading homepage content…</p>
+      <main className="min-h-screen bg-paper px-6 py-12 text-ink">
+        <p className="mx-auto max-w-6xl text-sm text-muted">Loading homepage content…</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#111310] text-[#f2f0e9]">
+    <main className="min-h-screen bg-paper text-ink">
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
         <header className="mb-9 flex flex-wrap items-end justify-between gap-5 border-b border-white/10 pb-7">
           <div>
-            <a className="text-xs text-[#979892] transition hover:text-[#d1f16a]" href="/">
+            <a className="text-xs tex.t-[#979892] transition hover:text-acid" href="/">
               ← View homepage
             </a>
-            <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.24em] text-[#d1f16a]">
+            <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.24em] text-acid">
               FORME / CONTENT STUDIO
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
               Homepage dashboard
             </h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-[#979892]">
+            <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
               Edit every homepage section and manage the work carousel. Changes save automatically in this browser.
             </p>
           </div>
-          <a
-            className="rounded-full border border-white/15 px-4 py-2 text-xs text-[#c5c6bf] transition hover:border-[#d1f16a]/60 hover:text-[#d1f16a]"
-            href="/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Preview homepage ↗
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <a
+              className="rounded-full border border-white/15 px-4 py-2 text-xs text-[#c5c6bf] transition hover:border-acid/60 hover:text-acid"
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Preview homepage ↗
+            </a>
+            <a
+              className="rounded-full border border-white/15 px-4 py-2 text-xs text-[#c5c6bf] transition hover:border-red-400/50 hover:text-red-200"
+              href="/logout"
+            >
+              Log out
+            </a>
+          </div>
         </header>
 
         {error && (
@@ -196,7 +204,7 @@ export default function DashboardPage() {
                   Projects <span className="text-[#777970]">({content.projects.length})</span>
                 </h3>
                 <button
-                  className="rounded-full bg-[#d1f16a] px-3.5 py-2 text-xs font-semibold text-[#111310] transition hover:bg-[#e0ff86]"
+                  className="rounded-full bg-acid px-3.5 py-2 text-xs font-semibold text-paper transition hover:bg-[#e0ff86]"
                   type="button"
                   onClick={newProject}
                 >
@@ -215,7 +223,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex gap-2">
                       <button
-                        className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#c5c6bf] transition hover:border-[#d1f16a]/50 hover:text-[#d1f16a]"
+                        className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#c5c6bf] transition hover:border-acid/50 hover:text-acid"
                         type="button"
                         onClick={() => setProjectDraft({ ...project })}
                       >
@@ -239,7 +247,7 @@ export default function DashboardPage() {
               </ul>
 
               {projectDraft && (
-                <form className="mt-4 space-y-4 rounded-xl border border-[#d1f16a]/30 bg-[#111310] p-4" onSubmit={saveProject}>
+                <form className="mt-4 space-y-4 rounded-xl border border-acid/30 bg-paper p-4" onSubmit={saveProject}>
                   <h3 className="text-sm font-semibold">{content.projects.some((project) => project.id === projectDraft.id) ? "Edit project" : "New project"}</h3>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <ContentField label="Project name" value={projectDraft.name} onChange={(value) => setProjectDraft({ ...projectDraft, name: value })} />
@@ -247,7 +255,7 @@ export default function DashboardPage() {
                     <label className="block text-xs font-medium text-[#a5a69f]">
                       Artwork style
                       <select
-                        className="mt-2 w-full rounded-xl border border-white/10 bg-[#10120f] px-3.5 py-3 text-sm text-[#f2f0e9] outline-none focus:border-[#d1f16a]/60"
+                        className="mt-2 w-full rounded-xl border border-white/10 bg-[#10120f] px-3.5 py-3 text-sm text-ink outline-none focus:border-acid/60"
                         value={projectDraft.art}
                         onChange={(event) => setProjectDraft({ ...projectDraft, art: event.target.value as ProjectArt })}
                       >
@@ -259,7 +267,7 @@ export default function DashboardPage() {
                     <button className="rounded-full border border-white/15 px-4 py-2 text-xs text-[#c5c6bf] hover:border-white/30" type="button" onClick={() => setProjectDraft(null)}>
                       Cancel
                     </button>
-                    <button className="rounded-full bg-[#d1f16a] px-4 py-2 text-xs font-semibold text-[#111310] hover:bg-[#e0ff86]" type="submit">
+                    <button className="rounded-full bg-acid px-4 py-2 text-xs font-semibold text-paper hover:bg-[#e0ff86]" type="submit">
                       Save project
                     </button>
                   </div>
