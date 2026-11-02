@@ -45,6 +45,7 @@ function ArrowIcon({ direction }: { direction: "left" | "right" }) {
 export default function Home() {
   const { content } = useHomepageContent();
   const [activeProject, setActiveProject] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const activeProjectIndex = content.projects.length
     ? activeProject % content.projects.length
     : 0;
@@ -65,8 +66,8 @@ export default function Home() {
 
   return (
     <main>
-      <header className="relative z-5 flex h-22 items-center justify-between border-b border-line px-[7.2%] max-[760px]:h-18 max-[760px]:px-[6%] min-[1500px]:px-[max(7.2%,calc((100vw-1320px)/2))]">
-        <a className="inline-flex items-center gap-2.75 text-[15px] font-extrabold tracking-[0.16em] text-inherit no-underline" href="#home" aria-label="Forme home">
+      <header className="sticky top-4 z-50 mx-auto mt-4 flex h-[72px] w-[calc(100%-48px)] max-w-[1320px] items-center justify-between rounded-full border border-[rgba(242,240,233,0.14)] bg-[rgba(17,19,16,0.76)] px-7 shadow-[0_12px_42px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl backdrop-saturate-150 max-[760px]:h-16 max-[760px]:w-[calc(100%-28px)] max-[760px]:px-4">
+        <a className="inline-flex shrink-0 items-center gap-2.75 text-[15px] font-extrabold tracking-[0.16em] text-inherit no-underline" href="#home" aria-label="Forme home">
           <span className="inline-flex h-6 w-6.25 items-center gap-0.5 perspective-[80px]" aria-hidden="true">
             <i className="block h-4.5 w-1.75 skew-y-[-28deg] rotate-y-[-25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
             <i className="block h-5.75 w-1.75 skew-y-28 rotate-y-25 bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
@@ -74,19 +75,42 @@ export default function Home() {
           </span>
           <span>{content.brandName}</span>
         </a>
-        <nav className="ml-[70px] flex gap-[38px] max-[760px]:hidden" aria-label="Main navigation">
-          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="#work">{content.navWorkLabel}</a>
-          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="#about">{content.navStudioLabel}</a>
-          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="/blog">Blog</a>
-          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none" href="/login">Login</a>
+        <nav className="absolute left-1/2 flex -translate-x-1/2 items-center gap-8 max-[760px]:hidden" aria-label="Main navigation">
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="#work">{content.navWorkLabel}</a>
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="#about">{content.navStudioLabel}</a>
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="/blog">Blog</a>
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="/login">Login</a>
         </nav>
-        <div className="flex items-center gap-3 max-[760px]:flex-col max-[760px]:items-end">
-          <a className="hidden text-[11px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid max-[760px]:inline-block" href="/blog">Blog</a>
-          <a className="hidden text-[11px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid max-[760px]:inline-block" href="/login">Login</a>
+        <div className="ml-auto flex items-center gap-2.5">
+          <a className="inline-flex h-10 items-center gap-2 rounded-full bg-acid px-4 text-[11px] font-semibold text-[#171a12] transition-[background-color,transform] duration-[180ms] hover:bg-[#e0fb93] hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none max-[760px]:h-9 max-[760px]:px-3.5" href={`mailto:${content.contactEmail}`}>
+            Let&apos;s talk <span aria-hidden="true">↗</span>
+          </a>
+          <button
+            className="grid size-10 cursor-pointer place-items-center rounded-full border border-[rgba(242,240,233,0.18)] bg-[rgba(255,255,255,0.04)] text-ink transition-colors hover:border-[rgba(209,241,106,0.55)] hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid min-[761px]:hidden"
+            type="button"
+            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
+          >
+            <span className="relative block h-3.5 w-4" aria-hidden="true">
+              <span className={`absolute left-0 block h-px w-4 bg-current transition-transform ${mobileMenuOpen ? "top-[6px] rotate-45" : "top-[3px]"}`} />
+              <span className={`absolute left-0 block h-px w-4 bg-current transition-transform ${mobileMenuOpen ? "top-[6px] -rotate-45" : "top-[10px]"}`} />
+            </span>
+          </button>
         </div>
-        <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid motion-reduce:transition-none max-[760px]:text-[11px]" href={`mailto:${content.contactEmail}`}>
-          Let&apos;s talk <span className="ml-[6px] text-acid" aria-hidden="true">↗</span>
-        </a>
+        {mobileMenuOpen && (
+          <nav
+            className="absolute top-[calc(100%+10px)] right-0 left-0 grid gap-1 rounded-[24px] border border-[rgba(242,240,233,0.14)] bg-[rgba(17,19,16,0.94)] p-2 shadow-[0_18px_48px_rgba(0,0,0,0.32)] backdrop-blur-2xl min-[761px]:hidden"
+            id="mobile-navigation"
+            aria-label="Mobile navigation"
+          >
+            <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="#work" onClick={() => setMobileMenuOpen(false)}>{content.navWorkLabel}</a>
+            <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="#about" onClick={() => setMobileMenuOpen(false)}>{content.navStudioLabel}</a>
+            <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</a>
+            <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="/login" onClick={() => setMobileMenuOpen(false)}>Login</a>
+          </nav>
+        )}
       </header>
 
       <section
