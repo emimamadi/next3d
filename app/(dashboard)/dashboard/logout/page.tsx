@@ -8,7 +8,7 @@ export default function LogoutPage() {
   function handleLogout() {
     setLoggingOut(true);
     window.localStorage.removeItem('forme-auth-session');
-    window.location.assign('/login');
+    window.location.assign('/dashboard/login');
   }
 
   return (

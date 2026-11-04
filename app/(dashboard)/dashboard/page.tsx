@@ -151,7 +151,7 @@ export default function DashboardPage() {
             </a>
             <a
               className="rounded-full border border-white/15 px-4 py-2 text-xs text-[#c5c6bf] transition hover:border-red-400/50 hover:text-red-200"
-              href="/logout"
+              href="/dashboard/logout"
             >
               Log out
             </a>
