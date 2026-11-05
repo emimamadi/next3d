@@ -223,7 +223,7 @@ export default function BlogPage() {
         </label>
       </header>
 
-      <section className="mx-auto mt-4 grid min-h-[455px] w-[min(1220px,calc(100%-96px))] items-center gap-8 rounded-[26px] border border-violet-500/20 bg-[radial-gradient(circle_at_80%_50%,rgba(143,110,255,0.32),transparent_30%),linear-gradient(120deg,#0b1429_0%,#101c33_50%,#0b1322_100%)] px-[7.2%] py-12 shadow-[0_24px_70px_rgba(14,18,34,0.55)] sm:w-[calc(100%-48px)] max-[640px]:w-[calc(100%-32px)] md:grid-cols-[0.86fr_1.14fr]" aria-labelledby="blog-title">
+      <section className="mx-auto mt-4 grid min-h-113.75 w-[min(1220px,calc(100%-96px))] items-center gap-8 rounded-[26px] border border-violet-500/20 bg-[radial-gradient(circle_at_80%_50%,rgba(143,110,255,0.32),transparent_30%),linear-gradient(120deg,#0b1429_0%,#101c33_50%,#0b1322_100%)] px-[7.2%] py-12 shadow-[0_24px_70px_rgba(14,18,34,0.55)] sm:w-[calc(100%-48px)] max-[640px]:w-[calc(100%-32px)] md:grid-cols-[0.86fr_1.14fr]" aria-labelledby="blog-title">
         <div className="relative z-10">
           <span className="inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.07em] text-slate-300"><span className="h-2 w-2 rounded-full bg-violet-400 shadow-[0_0_12px_rgba(167,139,250,0.7)]" /> A little more curious. A lot more you.</span>
           <h1 id="blog-title" className="mt-5 text-[clamp(46px,6.1vw,77px)] font-semibold leading-[0.98] tracking-[-0.085em] text-white">A fresh take<br />on <em className="font-serif text-violet-300 not-italic tracking-[-0.08em]">what&apos;s next.</em></h1>
