@@ -1,4 +1,6 @@
+# Dependencies
 /node_modules
+clean-main-before-switch.zip
 .pnp
 .pnp.*
 .yarn/*
