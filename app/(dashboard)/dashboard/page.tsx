@@ -127,7 +127,7 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
         <header className="mb-9 flex flex-wrap items-end justify-between gap-5 border-b border-white/10 pb-7">
           <div>
-            <a className="text-xs tex.t-[#979892] transition hover:text-acid" href="/">
+            <a className="text-xs text-[#979892] transition hover:text-acid" href="/">
               ← View homepage
             </a>
             <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.24em] text-acid">
