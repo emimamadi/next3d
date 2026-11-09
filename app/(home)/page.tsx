@@ -66,17 +66,17 @@ export default function Home() {
 
   return (
     <main>
-      <header className="sticky top-4 z-50 mx-auto mt-4 flex h-[72px] w-[calc(100%-48px)] max-w-[1320px] items-center justify-between rounded-full border border-[rgba(242,240,233,0.14)] bg-[rgba(17,19,16,0.76)] px-7 shadow-[0_12px_42px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl backdrop-saturate-150 max-[760px]:h-16 max-[760px]:w-[calc(100%-28px)] max-[760px]:px-4">
+      <header className="sticky top-4 z-50 mx-auto mt-4 flex h-18 w-[calc(100%-48px)] max-w-330 items-center justify-between rounded-full border border-line bg-[rgba(17,19,16,0.76)] px-7 shadow-[0_12px_42px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl backdrop-saturate-150 max-[760px]:h-16 max-[760px]:w-[calc(100%-28px)] max-[760px]:px-4">
         <a className="inline-flex shrink-0 items-center gap-2.75 text-[15px] font-extrabold tracking-[0.16em] text-inherit no-underline" href="#home" aria-label="Forme home">
           <span className="inline-flex h-6 w-6.25 items-center gap-0.5 perspective-[80px]" aria-hidden="true">
             <i className="block h-4.5 w-1.75 skew-y-[-28deg] rotate-y-[-25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
             <i className="block h-5.75 w-1.75 skew-y-28 rotate-y-25 bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
-            <i className="block h-[14px] w-[7px] -skew-y-[28deg] rotate-y-[-25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
+            <i className="block h-3.5 w-1.75 skew-y-[-28deg] rotate-y-[-25deg] bg-acid [box-shadow:2px_2px_0_rgba(209,241,106,0.2)]" />
           </span>
           <span>{content.brandName}</span>
         </a>
         <nav className="absolute left-1/2 flex -translate-x-1/2 items-center gap-8 max-[760px]:hidden" aria-label="Main navigation">
-          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="#work">{content.navWorkLabel}</a>
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-180 hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="#work">{content.navWorkLabel}</a>
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="#about">{content.navStudioLabel}</a>
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="/blog">Blog</a>
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="/dashboard/login">Login</a>
