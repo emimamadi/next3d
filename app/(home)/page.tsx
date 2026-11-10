@@ -79,6 +79,7 @@ export default function Home() {
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-180 hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="#work">{content.navWorkLabel}</a>
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="#about">{content.navStudioLabel}</a>
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="/blog">Blog</a>
+          <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="/news">News</a>
           <a className="text-[12px] text-[#c5c6bf] transition-colors duration-[180ms] hover:text-acid focus-visible:text-acid motion-reduce:transition-none" href="/dashboard/login">Login</a>
         </nav>
         <div className="ml-auto flex items-center gap-2.5">
@@ -108,6 +109,7 @@ export default function Home() {
             <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="#work" onClick={() => setMobileMenuOpen(false)}>{content.navWorkLabel}</a>
             <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="#about" onClick={() => setMobileMenuOpen(false)}>{content.navStudioLabel}</a>
             <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</a>
+            <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="/news" onClick={() => setMobileMenuOpen(false)}>News</a>
             <a className="rounded-2xl px-4 py-3 text-[13px] text-[#d3d4ce] transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-acid" href="/dashboard/login" onClick={() => setMobileMenuOpen(false)}>Login</a>
           </nav>
         )}

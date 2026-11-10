@@ -40,6 +40,28 @@ body {
   color: #eef2ff;
 }
 
+.news-shell {
+  background:
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.14), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.12), transparent 24%),
+    linear-gradient(180deg, #040915 0%, #0b1220 100%);
+}
+
+.news-3d-card,
+.news-3d-hero {
+  transform-style: preserve-3d;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.news-3d-card:hover {
+  transform: translateY(-8px) rotateX(5deg) rotateY(-7deg);
+  box-shadow: 0 28px 60px rgba(6, 10, 18, 0.7);
+}
+
+.news-3d-hero {
+  transform: perspective(1400px) rotateX(8deg) rotateY(-10deg);
+}
+
 @keyframes float-panel {
   0%, 100% {
     transform: rotateX(18deg) rotateY(-18deg) translateY(0px);
