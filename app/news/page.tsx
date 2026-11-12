@@ -27,7 +27,7 @@ export default function NewsPage() {
           </div>
         </header>
 
-        <section className="mb-16 grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
+        <section className="mb-16 grid gap-8 lg:grid-cols-[1.3fr_0.8fr_0.8fr] lg:items-stretch">
           <div className="news-3d-hero relative overflow-hidden rounded-[28px] border border-white/10 bg-slate-950/70 p-3 shadow-[0_30px_80px_rgba(8,12,26,0.72)]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(125,211,252,0.22),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.22),transparent_26%)]" />
             <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-slate-950">
@@ -90,6 +90,39 @@ export default function NewsPage() {
               ))}
             </div>
           </aside>
+
+          <div className="news-3d-card rounded-[28px] border border-white/10 bg-slate-900/80 p-5 shadow-[0_28px_60px_rgba(6,10,18,0.7)]">
+            <div className="mb-5 flex items-center justify-between">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-200/80">
+                Briefing
+              </p>
+              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-slate-400">Today</span>
+            </div>
+
+            <div className="space-y-4">
+              {stories.slice(3, 6).map((story) => (
+                <Link
+                  key={story.slug}
+                  href={`/news/${story.slug}`}
+                  className="group flex items-start gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-3 transition-colors hover:border-cyan-300/30 hover:bg-slate-950"
+                >
+                  <div
+                    className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-cover bg-center"
+                    style={{ backgroundImage: `url("${story.heroImage}")` }}
+                    aria-label={story.heroAlt}
+                  />
+                  <div>
+                    <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.18em] text-violet-200/80">
+                      {story.category}
+                    </p>
+                    <h3 className="text-sm font-semibold tracking-[-0.04em] text-white transition-colors group-hover:text-cyan-200">
+                      {story.title}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section>
@@ -102,7 +135,7 @@ export default function NewsPage() {
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {newsItems.map((story) => (
               <Link
                 key={story.slug}
