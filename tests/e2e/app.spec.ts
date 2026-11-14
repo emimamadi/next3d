@@ -63,6 +63,43 @@ test("dashboard reports invalid saved content without replacing it", async ({ pa
   await expect(page.getByRole("textbox", { name: "Brand name" })).toHaveValue("FORME");
 });
 
+test("dashboard creates, edits, and deletes newsroom stories", async ({ page }) => {
+  await page.goto("/dashboard");
+  await expect(page.getByRole("heading", { name: "Newsroom" })).toBeVisible();
+
+  await page.getByRole("button", { name: "+ Add story" }).click();
+  await page.getByRole("textbox", { name: "Title", exact: true }).fill("Dashboard story");
+  await page.getByRole("textbox", { name: "URL slug" }).fill("dashboard-story");
+  await page.getByRole("textbox", { name: "Category" }).fill("Testing");
+  await page.getByRole("textbox", { name: "Author" }).fill("Test Author");
+  await page.getByRole("textbox", { name: "Hero image URL" }).fill("https://example.com/image.jpg");
+  await page.getByRole("textbox", { name: "Hero image description" }).fill("A test image");
+  await page.getByRole("textbox", { name: "Deck / summary" }).fill("A story created from the dashboard.");
+  await page.getByRole("textbox", { name: "Section heading" }).fill("The details");
+  await page.getByRole("textbox", { name: "Paragraphs (one paragraph per line)" }).fill("The full story text.");
+  await page.getByRole("button", { name: "Save story" }).click();
+
+  const story = page.getByRole("listitem").filter({ hasText: "Dashboard story" });
+  await expect(story).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("listitem").filter({ hasText: "Dashboard story" })).toBeVisible();
+
+  await page.goto("/news");
+  await page.getByRole("link", { name: /Dashboard story/ }).click();
+  await expect(page).toHaveURL(/\/news\/dashboard-story$/);
+  await expect(page.getByRole("heading", { name: "The details" })).toBeVisible();
+
+  await page.goto("/dashboard");
+  await page.getByRole("listitem").filter({ hasText: "Dashboard story" }).getByRole("button", { name: "Edit" }).click();
+  await page.getByRole("textbox", { name: "Title", exact: true }).fill("Updated dashboard story");
+  await page.getByRole("button", { name: "Save story" }).click();
+  await expect(page.getByRole("listitem").filter({ hasText: "Updated dashboard story" })).toBeVisible();
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("listitem").filter({ hasText: "Updated dashboard story" }).getByRole("button", { name: "Delete" }).click();
+  await expect(page.getByRole("listitem").filter({ hasText: "Updated dashboard story" })).toHaveCount(0);
+});
+
 test("login creates a session and logout clears it", async ({ page }) => {
   await page.goto("/dashboard/login");
   await page.getByRole("textbox", { name: "Email" }).fill("test@example.com");

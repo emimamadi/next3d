@@ -7,6 +7,8 @@ import {
   type HomepageProject,
   type ProjectArt,
 } from "../../homepage-content";
+import { useNewsContent } from "../../news/news-content";
+import type { NewsItem } from "../../news/news-data";
 
 type TextContentKey = Exclude<keyof HomepageContent, "projects">;
 
@@ -76,9 +78,38 @@ function SectionCard({
   );
 }
 
+function newNewsItem(id: number): NewsItem {
+  return {
+    id,
+    slug: "",
+    title: "",
+    category: "",
+    readTime: "5 min read",
+    publishedAt: new Date().toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }),
+    author: "",
+    deck: "",
+    heroImage: "",
+    heroAlt: "",
+    accent: "from-cyan-400 via-sky-500 to-indigo-500",
+    content: [{ heading: "Story", paragraphs: [""] }],
+  };
+}
+
 export default function DashboardPage() {
   const { content, setContent, loaded, error } = useHomepageContent();
+  const {
+    items: managedNews,
+    setItems: setManagedNews,
+    loaded: newsLoaded,
+    error: newsError,
+  } = useNewsContent();
   const [projectDraft, setProjectDraft] = useState<HomepageProject | null>(null);
+  const [newsDraft, setNewsDraft] = useState<NewsItem | null>(null);
+  const [newsFormError, setNewsFormError] = useState("");
 
   function updateContent(key: TextContentKey, value: string) {
     setContent((current) => ({ ...current, [key]: value }));
@@ -114,7 +145,68 @@ export default function DashboardPage() {
     });
   }
 
-  if (!loaded) {
+  function saveNews(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!newsDraft) return;
+    const slug = newsDraft.slug.trim();
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+      setNewsFormError("Use a lowercase URL slug with words separated by hyphens.");
+      return;
+    }
+    if (
+      !newsDraft.title.trim() ||
+      !newsDraft.category.trim() ||
+      !newsDraft.readTime.trim() ||
+      !newsDraft.publishedAt.trim() ||
+      !newsDraft.author.trim() ||
+      !newsDraft.deck.trim() ||
+      !newsDraft.heroImage.trim() ||
+      !newsDraft.heroAlt.trim()
+    ) {
+      setNewsFormError("Complete the title, category, author, summary, image URL, and image description.");
+      return;
+    }
+    if (
+      newsDraft.content.some(
+        (section) => !section.heading.trim() || !section.paragraphs.some((paragraph) => paragraph.trim()),
+      )
+    ) {
+      setNewsFormError("Each article section needs a heading and at least one paragraph.");
+      return;
+    }
+    if (managedNews.some((item) => item.slug === slug && item.id !== newsDraft.id)) {
+      setNewsFormError("A story with this URL slug already exists.");
+      return;
+    }
+
+    const item = {
+      ...newsDraft,
+      slug,
+      title: newsDraft.title.trim(),
+      category: newsDraft.category.trim(),
+      author: newsDraft.author.trim(),
+      deck: newsDraft.deck.trim(),
+      content: newsDraft.content.map((section) => ({
+        heading: section.heading.trim(),
+        paragraphs: section.paragraphs.map((paragraph) => paragraph.trim()).filter(Boolean),
+      })),
+    };
+    const exists = managedNews.some((story) => story.id === item.id);
+    setManagedNews((current) =>
+      exists
+        ? current.map((story) => (story.id === item.id ? item : story))
+        : [item, ...current],
+    );
+    setNewsDraft(null);
+    setNewsFormError("");
+  }
+
+  function deleteNews(item: NewsItem) {
+    if (!window.confirm(`Delete "${item.title}" from the newsroom?`)) return;
+    setManagedNews((current) => current.filter((story) => story.id !== item.id));
+  }
+
+  if (!loaded || !newsLoaded) {
     return (
       <main className="min-h-screen bg-paper px-6 py-12 text-ink">
         <p className="mx-auto max-w-6xl text-sm text-muted">Loading homepage content…</p>
@@ -161,6 +253,11 @@ export default function DashboardPage() {
         {error && (
           <p role="alert" className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">
             {error}
+          </p>
+        )}
+        {newsError && (
+          <p role="alert" className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">
+            {newsError}
           </p>
         )}
 
@@ -288,6 +385,160 @@ export default function DashboardPage() {
           <SectionCard number="05" title="Footer" description="The copyright line. Footer contact uses the email above.">
             <ContentField label="Copyright text" value={content.footerCopyright} onChange={(value) => updateContent("footerCopyright", value)} />
           </SectionCard>
+
+          <section className="rounded-2xl border border-white/10 bg-[#171914] p-5 sm:p-6 lg:col-span-2">
+            <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-5">
+              <div className="flex items-start gap-4">
+                <span className="pt-0.5 font-mono text-xs text-acid">06</span>
+                <div>
+                  <h2 className="text-base font-semibold text-ink">Newsroom</h2>
+                  <p className="mt-1 text-xs leading-5 text-[#85877e]">
+                    Create, edit, and remove stories shown on the news page. Changes save in this browser.
+                  </p>
+                </div>
+              </div>
+              <button
+                className="rounded-full bg-acid px-3.5 py-2 text-xs font-semibold text-paper transition hover:bg-[#e0ff86]"
+                type="button"
+                onClick={() => {
+                  setNewsDraft(newNewsItem(Math.max(Date.now(), ...managedNews.map((item) => item.id + 1))));
+                  setNewsFormError("");
+                }}
+              >
+                + Add story
+              </button>
+            </div>
+
+            <ul className="space-y-2">
+              {managedNews.map((item) => (
+                <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-[#10120f] px-3.5 py-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{item.title || "Untitled story"}</p>
+                    <p className="mt-1 truncate text-xs text-[#85877e]">{item.category} · /news/{item.slug}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#c5c6bf] transition hover:border-acid/50 hover:text-acid"
+                      type="button"
+                      onClick={() => {
+                        setNewsDraft({
+                          ...item,
+                          content: item.content.map((section) => ({
+                            ...section,
+                            paragraphs: [...section.paragraphs],
+                          })),
+                        });
+                        setNewsFormError("");
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#c5c6bf] transition hover:border-red-400/50 hover:text-red-200"
+                      type="button"
+                      onClick={() => deleteNews(item)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+              {managedNews.length === 0 && (
+                <li className="rounded-xl border border-dashed border-white/15 px-4 py-6 text-center text-xs text-[#85877e]">
+                  No news stories yet. Add one to publish the first story.
+                </li>
+              )}
+            </ul>
+
+            {newsDraft && (
+              <form className="mt-4 space-y-4 rounded-xl border border-acid/30 bg-paper p-4" onSubmit={saveNews}>
+                <h3 className="text-sm font-semibold">
+                  {managedNews.some((item) => item.id === newsDraft.id) ? "Edit story" : "New story"}
+                </h3>
+                {newsFormError && <p role="alert" className="text-sm text-red-300">{newsFormError}</p>}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <ContentField label="Title" value={newsDraft.title} onChange={(value) => setNewsDraft({ ...newsDraft, title: value })} />
+                  <ContentField label="URL slug" value={newsDraft.slug} onChange={(value) => setNewsDraft({ ...newsDraft, slug: value })} />
+                  <ContentField label="Category" value={newsDraft.category} onChange={(value) => setNewsDraft({ ...newsDraft, category: value })} />
+                  <ContentField label="Read time" value={newsDraft.readTime} onChange={(value) => setNewsDraft({ ...newsDraft, readTime: value })} />
+                  <ContentField label="Published date" value={newsDraft.publishedAt} onChange={(value) => setNewsDraft({ ...newsDraft, publishedAt: value })} />
+                  <ContentField label="Author" value={newsDraft.author} onChange={(value) => setNewsDraft({ ...newsDraft, author: value })} />
+                  <ContentField label="Hero image URL" value={newsDraft.heroImage} onChange={(value) => setNewsDraft({ ...newsDraft, heroImage: value })} />
+                  <ContentField label="Hero image description" value={newsDraft.heroAlt} onChange={(value) => setNewsDraft({ ...newsDraft, heroAlt: value })} />
+                  <div className="sm:col-span-2">
+                    <ContentField label="Deck / summary" value={newsDraft.deck} multiline onChange={(value) => setNewsDraft({ ...newsDraft, deck: value })} />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <h4 className="text-xs font-semibold uppercase tracking-[0.12em] text-[#a5a69f]">Article sections</h4>
+                    <button
+                      type="button"
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#c5c6bf] hover:border-acid/50 hover:text-acid"
+                      onClick={() => setNewsDraft({
+                        ...newsDraft,
+                        content: [...newsDraft.content, { heading: "", paragraphs: [""] }],
+                      })}
+                    >
+                      + Add section
+                    </button>
+                  </div>
+                  {newsDraft.content.map((section, index) => (
+                    <div key={index} className="rounded-xl border border-white/10 p-3">
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <span className="text-xs text-[#85877e]">Section {index + 1}</span>
+                        {newsDraft.content.length > 1 && (
+                          <button
+                            type="button"
+                            className="text-xs text-red-200 hover:text-red-100"
+                            onClick={() => setNewsDraft({
+                              ...newsDraft,
+                              content: newsDraft.content.filter((_, sectionIndex) => sectionIndex !== index),
+                            })}
+                          >
+                            Remove section
+                          </button>
+                        )}
+                      </div>
+                      <div className="grid gap-4">
+                        <ContentField
+                          label="Section heading"
+                          value={section.heading}
+                          onChange={(value) => setNewsDraft({
+                            ...newsDraft,
+                            content: newsDraft.content.map((part, sectionIndex) =>
+                              sectionIndex === index ? { ...part, heading: value } : part,
+                            ),
+                          })}
+                        />
+                        <ContentField
+                          label="Paragraphs (one paragraph per line)"
+                          value={section.paragraphs.join("\n")}
+                          multiline
+                          onChange={(value) => setNewsDraft({
+                            ...newsDraft,
+                            content: newsDraft.content.map((part, sectionIndex) =>
+                              sectionIndex === index
+                                ? { ...part, paragraphs: value.split("\n") }
+                                : part,
+                            ),
+                          })}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end gap-2">
+                  <button className="rounded-full border border-white/15 px-4 py-2 text-xs text-[#c5c6bf] hover:border-white/30" type="button" onClick={() => { setNewsDraft(null); setNewsFormError(""); }}>
+                    Cancel
+                  </button>
+                  <button className="rounded-full bg-acid px-4 py-2 text-xs font-semibold text-paper hover:bg-[#e0ff86]" type="submit">
+                    Save story
+                  </button>
+                </div>
+              </form>
+            )}
+          </section>
         </div>
       </div>
     </main>
