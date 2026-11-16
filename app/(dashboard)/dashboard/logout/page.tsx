@@ -14,7 +14,7 @@ export default function LogoutPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-paper px-5 text-ink">
       <section className="w-full max-w-md rounded-2xl border border-white/10 bg-[#171914] p-7 text-center sm:p-9">
-        <div className="mx-auto mb-6 flex size-14 items-center justify-center rounded-full border border-[#d1f16a]/30 bg-[#d1f16a]/10 text-2xl text-[#d1f16a]" aria-hidden="true">
+        <div className="mx-auto mb-6 flex size-14 items-center justify-center rounded-full border border-acid/30 bg-acid/10 text-2xl text-acid" aria-hidden="true">
           ↪
         </div>
         <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#d1f16a]">FORME / Session</p>

@@ -147,7 +147,18 @@ export function useHomepageContent() {
 
   const setContent: Dispatch<SetStateAction<HomepageContent>> = (nextContent) => {
     setStorageReady(true);
-    setHomepageContent(nextContent);
+    setHomepageContent((current) => {
+      const resolved = typeof nextContent === "function" ? (nextContent as (value: HomepageContent) => HomepageContent)(current) : nextContent;
+
+      try {
+        window.localStorage.setItem(storageKey, JSON.stringify(resolved));
+        setError("");
+      } catch {
+        setError("Could not save homepage content to this browser.");
+      }
+
+      return resolved;
+    });
   };
 
   return { content, setContent, loaded, error };

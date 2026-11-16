@@ -103,7 +103,18 @@ export function useNewsContent() {
 
   const setItems: Dispatch<SetStateAction<NewsItem[]>> = (nextItems) => {
     setStorageReady(true);
-    setNewsItems(nextItems);
+    setNewsItems((current) => {
+      const resolved = typeof nextItems === "function" ? (nextItems as (value: NewsItem[]) => NewsItem[])(current) : nextItems;
+
+      try {
+        window.localStorage.setItem(storageKey, JSON.stringify(resolved));
+        setError("");
+      } catch {
+        setError("Could not save news content to this browser.");
+      }
+
+      return resolved;
+    });
   };
 
   return { items, setItems, loaded, error };
