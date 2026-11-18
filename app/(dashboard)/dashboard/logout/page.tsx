@@ -17,9 +17,9 @@ export default function LogoutPage() {
         <div className="mx-auto mb-6 flex size-14 items-center justify-center rounded-full border border-acid/30 bg-acid/10 text-2xl text-acid" aria-hidden="true">
           ↪
         </div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#d1f16a]">FORME / Session</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-acid">FORME / Session</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">Log out?</h1>
-        <p className="mt-3 text-sm leading-6 text-[#979892]">
+        <p className="mt-3 text-sm leading-6 text-muted">
           You will be signed out of the content studio and returned to the login page.
         </p>
         <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
