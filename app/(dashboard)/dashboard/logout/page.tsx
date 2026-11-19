@@ -33,7 +33,7 @@ export default function LogoutPage() {
             type="button"
             onClick={handleLogout}
             disabled={loggingOut}
-            className="rounded-full bg-[#d1f16a] px-5 py-2.5 text-sm font-semibold text-[#111310] transition hover:bg-[#e0ff86] disabled:cursor-wait disabled:opacity-70"
+            className="rounded-full bg-acid px-5 py-2.5 text-sm font-semibold text-paper transition hover:bg-[#e0ff86] disabled:cursor-wait disabled:opacity-70"
           >
             {loggingOut ? 'Logging out…' : 'Log out'}
           </button>
